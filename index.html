@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="./node_modules/jspdf/dist/jspdf.debug.js"></script>
+    <!--<script type="text/javascript" src="./node_modules/html2canvas/dist/html2canvas.js"></script>-->
+</head>
+<body>
+<a href="#" onclick="window.open('../lib/1.pdf','PDF');">查看09.pdf</a>
+<button id="print1">打印全部</button>
+<div id="image1"></div>
+<!--startprint-->
+<div class="pring-table" id="pringTable" style="background: #fff;">
+    <table>
+        <thead>
+        <tr>
+            <th>物品名称</th>
+            <th>物品数量</th>
+            <th>物品单价</th>
+            <th>物品总价</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>大白菜</td>
+            <td>5kg</td>
+            <td>1元/kg</td>
+            <td>5元</td>
+        </tr>
+        <tr>
+            <td>大白菜</td>
+            <td>5kg</td>
+            <td>1元/kg</td>
+            <td>5元</td>
+        </tr>
+        <tr>
+            <td>大白菜</td>
+            <td>5kg</td>
+            <td>1元/kg</td>
+            <td>5元</td>
+        </tr>
+        <tr>
+            <td>大白菜</td>
+            <td>5kg</td>
+            <td>1元/kg</td>
+            <td>5元</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--endprint-->
+</body>
+<script type="text/javascript" src="./js/app.js"></script>
+</html>
+<!--
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="./node_modules/jspdf/dist/jspdf.debug.js"></script>
+    <script type="text/javascript" src="./node_modules/html2canvas/dist/html2canvas.js"></script>
+    <script type="text/javascript">
+        function doPrint(){
+
+            bdhtml=window.document.body.innerHTML;
+
+            sprnstr="&lt;!&ndash;startprint&ndash;&gt;";
+
+            eprnstr="&lt;!&ndash;b&ndash;&gt;";
+
+            prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);
+
+            prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));
+
+            window.document.body.innerHTML=prnhtml;
+
+            window.print();
+            top.layer.closeAll();
+
+        }
+        function closes (){
+            top.layer.closeAll();
+        }
+
+
+        function downPdf(){
+            document.getElementById("dayin").style.display = "none";
+            document.getElementById("baocun").style.display = "none";
+            html2canvas(document.body, {
+                onrendered:function(canvas) {
+
+                    var contentWidth = canvas.width;
+                    var contentHeight = canvas.height;
+
+                    //一页pdf显示html页面生成的canvas高度;
+                    var pageHeight = contentWidth / 592.28 * 841.89;
+                    //未生成pdf的html页面高度
+                    var leftHeight = contentHeight;
+                    //pdf页面偏移
+                    var position = 0;
+                    //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+                    var imgWidth = 595.28;
+                    var imgHeight = 592.28/contentWidth * contentHeight;
+
+                    var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+                    var pdf = new jsPDF('', 'pt', 'a4');
+
+                    //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+                    //当内容未超过pdf一页显示的范围，无需分页
+                    if (leftHeight < pageHeight) {
+                        pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight );
+                    } else {
+                        while(leftHeight > 0) {
+                            pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+                            leftHeight -= pageHeight;
+                            position -= 841.89;
+                            //避免添加空白页
+                            if(leftHeight > 0) {
+                                pdf.addPage();
+                            }
+                        }
+                    }
+
+                    pdf.save(document.getElementById("emNo").innerText+"("+document.getElementById("dt").innerText+').pdf');
+                }
+            })
+            document.getElementById("baocun").style.display = "";
+            document.getElementById("dayin").style.display = "";
+        }
+
+    </script>
+</head>
+<body >
+<div style="width: 800px;height: 35px;">
+        <button id="dayin" onclick="doPrint()" class="" style="border-bottom:1px solid #0071ce;float: right;background: #0071ce;color:rgb(255, 255, 255);font-size:13px;margin-right: 10px; margin-top: 10px;"><i class="fa fa-print"></i>打印</button>
+        <button id="baocun" onclick="downPdf()" class="" style="border-bottom:1px solid #0071ce;float: right;background: #0071ce;color:rgb(255, 255, 255);font-size:13px;margin-right: 10px; margin-top: 10px;"><i class="fa fa-print"></i>保存</button>
+</div>
+&lt;!&ndash;startprint&ndash;&gt;
+<br>
+    <div id="print" style="padding-left: 15px; padding-right: 15px;">
+            <table style="width: 100%">
+                <tr>
+                    <td colspan="8" style="text-align: center;font-size: 20px;">新XXXXX物业服务中心</td>
+                </tr>
+                <tr >
+                    <td colspan="8"style="text-align: center;font-size: 14px;padding-top: 10px;">收费单据</td>
+                </tr>
+                <tr>
+                    <td colspan="2">收票类型：电费</td>
+                    <td colspan="3"></td>
+                    <td>缴费日期：</td>
+                    <td colspan="2" id="dt">${emfee.dt}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">户名</td>
+                    <td  style="text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.userName}</td>
+                    <td style="text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">表号</td>
+                    <td id="emNo" colspan="2"   style="text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.emNo}</td>
+                    <td style=" text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">房号</td>
+                    <td colspan="2" style=" text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.num}</td>
+                </tr>
+                <tr>
+                    <td style=" text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">起止时间</td>
+                    <td colspan="3" style=" text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.emDt}至${emfee.startDt}</td>
+                    <td style=" text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">缴费金额</td>
+                    <td style=" text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.tranMoney}</td>
+                    <td style="text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">倍率</td>
+                    <td style="text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.emRate}</td>
+                </tr>
+                <tr>
+                    <td rowspan="6" style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;">用电量</td>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">时段</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">起止表码</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">倍率前用量</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">本次用量</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">单价</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">本次电费</td>
+                </tr>
+                <tr>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">尖</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.mosaicJian}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.jianQuantity}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.blJian}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.jian}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.jianFee}</td>
+                </tr>
+                <tr>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">峰</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.mosaicFeng}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.fengQuantity}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.blFeng}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.feng}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.fengFee}</td>
+                </tr>
+                <tr>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">平</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.mosaicPing}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.pingQuantity}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.blPing}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.ping}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.pingFee}</td>
+                </tr>
+                <tr>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">谷</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.mosaicGu}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.guQuantity}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.blGu}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.gu}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.guFee}</td>
+                </tr>
+                <tr>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">总</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.mosaicZong}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.quantity}</td>
+                    <td style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">${emfee.blquantity}</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">——</td>
+                    <td style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;">${emfee.electFee}</td>
+                </tr>
+                <tr>
+                    <td rowspan="2"  style="text-align: center;font-size: 14px;height:40px;border:1px solid #000000;">电费</td>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">上次剩余(元)</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">本期已用(元)</td>
+                    <td  colspan="2" style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">本次缴费(元)</td>
+                    <td   colspan="2" style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;border-bottom:0px solid #000000;">本次剩余(元)</td>
+                </tr>
+                <tr>
+                    <td style="width: 12%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;">${emfee.lastRemainQ}</td>
+                    <td colspan="2" style="width: 13%; text-align: center ;font-size: 14px;height: 40px;border:1px solid #000000;">${emfee.electFee}</td>
+                    <td colspan="2" style="width: 12%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;">${emfee.tranMoney}</td>
+                    <td colspan="2" style="width: 13%; text-align: center;font-size: 14px;height: 40px;border:1px solid #000000;">${emfee.remainQ}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;font-size: 14px;height: 40px;"></td>
+                    <td style="text-align: center;font-size: 14px;height: 40px;">收款人：</td>
+                    <td colspan="2" style="text-align: center;font-size: 14px;height: 40px;"></td>
+                    <td style="text-align:center ;font-size: 14px;height: 40px;">付款人：</td>
+                    <td colspan="2" style="text-align:center ;font-size: 14px;height: 40px;"></td>
+                </tr>
+            </table>
+        &lt;!&ndash;b&ndash;&gt;
+        </div>
+</body>
+</html>
+-->
